@@ -43,7 +43,7 @@ class _MapScreenState extends ConsumerState<MapScreen> with TickerProviderStateM
   final TextEditingController _searchController = TextEditingController();
 
   // Clé API Google
-  static const String _googleApiKey = 'AIzaSyDecdBGeUM-bI3E3aOjFwNkHr-HVbR3erc';
+  static const String _googleApiKey = 'ma clé';
 
   final List<Map<String, dynamic>> _availableTypes = [
     {'id': null, 'label': 'Tout', 'icon': Icons.explore, 'color': Color(0xFF6C63FF)},
