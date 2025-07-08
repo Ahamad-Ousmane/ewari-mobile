@@ -227,7 +227,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               ),
 
               // Actions à droite
-              _buildHeaderAction(Icons.search, () => context.push('/infrastructures')),
+              _buildHeaderAction(Icons.search, () => context.go('/infrastructures')),
             ],
           ),
         ),
@@ -296,7 +296,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 borderRadius: BorderRadius.circular(12),
               ),
               child: IconButton(
-                onPressed: () => context.push('/map'),
+                onPressed: () => context.go('/map'),
                 icon: const Icon(
                   Icons.map,
                   color: Colors.white,
@@ -314,7 +314,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           ),
           onSubmitted: (value) {
             if (value.isNotEmpty) {
-              context.push('/infrastructures?search=$value');
+              context.go('/infrastructures?search=$value');
             }
           },
         ),
@@ -382,8 +382,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   height: 1.1,
                 ),
               ),
-
-              const SizedBox(height: 8),
             ],
           ),
         ),
@@ -451,7 +449,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 8),
                         child: GestureDetector(
-                          onTap: () => context.push('/infrastructures?type=${category['type']}'),
+                          onTap: () => context.go('/infrastructures?type=${category['type']}'),
                           child: Column(
                             children: [
                               Container(
@@ -691,7 +689,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   Widget _buildFeaturedCard(InfrastructureTouristique infrastructure, int index) {
     return GestureDetector(
-      onTap: () => context.push('/infrastructure/${infrastructure.id}'),
+      onTap: () => context.go('/infrastructure/${infrastructure.id}'),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -822,16 +820,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   String _buildSupabaseImageUrl(String imagePath) {
-    // Si c'est déjà une URL complète, la retourner telle quelle
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
       return imagePath;
     }
 
-    // URL Supabase Storage
     const String projectId = 'gpogbnmvkvpzphtbosai';
     const String bucketName = 'images';
-
-    // Construction de l'URL complète
     final url = 'https://$projectId.supabase.co/storage/v1/object/public/$bucketName/$imagePath';
     return url;
   }

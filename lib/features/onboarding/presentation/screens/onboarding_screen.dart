@@ -1,17 +1,16 @@
-// lib/features/onboarding/presentation/screens/onboarding_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../../home/presentation/screens/home_screen.dart'; // 👈 Pour navigation directe
+import '../../../../core/services/onboarding_service.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen>
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     with TickerProviderStateMixin {
 
   late AnimationController _fadeController;
@@ -110,19 +109,19 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   void _startAnimations() {
     // Séquence d'animations
     Future.delayed(const Duration(milliseconds: 200), () {
-      _logoController.forward();
+      if (mounted) _logoController.forward();
     });
 
     Future.delayed(const Duration(milliseconds: 600), () {
-      _fadeController.forward();
+      if (mounted) _fadeController.forward();
     });
 
     Future.delayed(const Duration(milliseconds: 1000), () {
-      _slideController.forward();
+      if (mounted) _slideController.forward();
     });
 
     Future.delayed(const Duration(milliseconds: 1800), () {
-      _buttonController.forward();
+      if (mounted) _buttonController.forward();
     });
   }
 
@@ -134,45 +133,43 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     });
 
     try {
-      // Marquer l'onboarding comme terminé AVANT la navigation
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('onboarding_completed', true);
+      print('🚀 Début navigation depuis onboarding...');
 
-      print('✅ Onboarding marqué comme terminé');
+      // Marquer l'onboarding comme terminé via le service Riverpod
+      await ref.read(onboardingServiceProvider.notifier).markOnboardingCompleted();
+
+      print('✅ Onboarding marqué comme terminé, déclenchement redirection...');
+
+      // Petit délai pour s'assurer que l'état est propagé dans Riverpod
+      await Future.delayed(const Duration(milliseconds: 150));
 
       if (mounted) {
-        print('🚀 Navigation vers home...');
-
-        // Navigation directe avec Navigator classique (plus fiable que GoRouter)
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-              (route) => false, // Supprime toutes les routes précédentes
-        );
+        print('🔄 Navigation vers home avec GoRouter...');
+        // Utiliser GoRouter - la redirection automatique va se déclencher
+        context.go('/');
       }
     } catch (e) {
       print('❌ Erreur navigation onboarding: $e');
       if (mounted) {
-        // Reset l'état et tenter navigation directe
+        // Reset l'état en cas d'erreur
         setState(() {
           _isNavigating = false;
         });
 
-        // Navigation de secours avec GoRouter
-        try {
-          context.go('/');
-        } catch (navError) {
-          print('❌ Erreur navigation de secours: $navError');
-        }
+        // Afficher un message d'erreur
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erreur lors de la navigation: $e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -191,10 +188,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.black.withValues(alpha: 0.4),   // Plus sombre en haut
-                Colors.black.withValues(alpha: 0.2),   // Clair au milieu
-                Colors.black.withValues(alpha: 0.5),   // Plus sombre au centre
-                Colors.black.withValues(alpha: 0.8),   // Très sombre en bas
+                Colors.black.withOpacity(0.4),   // Plus sombre en haut
+                Colors.black.withOpacity(0.2),   // Clair au milieu
+                Colors.black.withOpacity(0.5),   // Plus sombre au centre
+                Colors.black.withOpacity(0.8),   // Très sombre en bas
               ],
               stops: const [0.0, 0.25, 0.60, 1.0],
             ),
@@ -221,18 +218,18 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      Colors.white.withValues(alpha: 0.2),
-                                      Colors.white.withValues(alpha: 0.1),
+                                      Colors.white.withOpacity(0.2),
+                                      Colors.white.withOpacity(0.1),
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(28),
                                   border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.3),
+                                    color: Colors.white.withOpacity(0.3),
                                     width: 1.5,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.1),
+                                      color: Colors.black.withOpacity(0.1),
                                       blurRadius: 20,
                                       offset: const Offset(0, 8),
                                     ),
@@ -255,7 +252,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                   letterSpacing: 2.0,
                                   shadows: [
                                     Shadow(
-                                      color: Colors.black.withValues(alpha: 0.6),
+                                      color: Colors.black.withOpacity(0.6),
                                       blurRadius: 6,
                                       offset: const Offset(1, 1),
                                     ),
@@ -271,25 +268,25 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      Colors.black.withValues(alpha: 0.3),
-                                      Colors.black.withValues(alpha: 0.1),
+                                      Colors.black.withOpacity(0.3),
+                                      Colors.black.withOpacity(0.1),
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.3),
+                                    color: Colors.white.withOpacity(0.3),
                                   ),
                                 ),
                                 child: Text(
                                   'Tourisme au Bénin',
                                   style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.95),
+                                    color: Colors.white.withOpacity(0.95),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0.5,
                                     shadows: [
                                       Shadow(
-                                        color: Colors.black.withValues(alpha: 0.5),
+                                        color: Colors.black.withOpacity(0.5),
                                         blurRadius: 4,
                                         offset: const Offset(1, 1),
                                       ),
@@ -325,7 +322,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                   letterSpacing: -1.0,
                                   shadows: [
                                     Shadow(
-                                      color: Colors.black.withValues(alpha: 0.7),
+                                      color: Colors.black.withOpacity(0.7),
                                       blurRadius: 8,
                                       offset: const Offset(2, 2),
                                     ),
@@ -358,17 +355,17 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    Colors.black.withValues(alpha: 0.4),
-                                    Colors.black.withValues(alpha: 0.2),
+                                    Colors.black.withOpacity(0.4),
+                                    Colors.black.withOpacity(0.2),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.3),
+                                  color: Colors.white.withOpacity(0.3),
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.3),
+                                    color: Colors.black.withOpacity(0.3),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
                                   ),
@@ -382,7 +379,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                       Container(
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFF6C63FF).withValues(alpha: 0.2),
+                                          color: const Color(0xFF6C63FF).withOpacity(0.2),
                                           borderRadius: BorderRadius.circular(12),
                                         ),
                                         child: const Icon(
@@ -406,7 +403,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                   Text(
                                     'Explorez les trésors cachés, découvrez la culture riche et vivez des expériences inoubliables dans le berceau du vodou.',
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.9),
+                                      color: Colors.white.withOpacity(0.9),
                                       fontSize: 16,
                                       height: 1.6,
                                       letterSpacing: 0.3,
@@ -474,10 +471,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: Colors.white.withOpacity(0.1),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: Colors.white.withOpacity(0.2),
             ),
           ),
           child: Icon(
@@ -490,7 +487,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         Text(
           label,
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.8),
+            color: Colors.white.withOpacity(0.8),
             fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
@@ -521,8 +518,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             boxShadow: [
               BoxShadow(
                 color: _isNavigating
-                    ? Colors.grey.withValues(alpha: 0.3)
-                    : const Color(0xFF6C63FF).withValues(alpha: 0.4),
+                    ? Colors.grey.withOpacity(0.3)
+                    : const Color(0xFF6C63FF).withOpacity(0.4),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -577,23 +574,5 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     _buttonController.dispose();
     _logoController.dispose();
     super.dispose();
-  }
-}
-
-// Extension pour vérifier si l'onboarding a été complété
-class OnboardingHelper {
-  static Future<bool> hasCompletedOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('onboarding_completed') ?? false;
-  }
-
-  static Future<void> resetOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_completed', false);
-  }
-
-  static Future<void> markOnboardingCompleted() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_completed', true);
   }
 }

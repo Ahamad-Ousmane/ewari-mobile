@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
@@ -9,56 +8,62 @@ import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/infrastructure/presentation/screens/infrastructure_list_screen.dart';
 import '../../features/infrastructure/presentation/screens/infrastructure_detail_screen.dart';
 import '../../features/map/presentation/screens/map_screen.dart';
+import '../../features/ar/presentation/screens/ar_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../navigation/main_shell.dart';
 import '../services/auth_service.dart';
-
-// Provider pour vérifier l'état de l'onboarding
-final onboardingStateProvider = FutureProvider<bool>((ref) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('onboarding_completed') ?? false;
-});
+import '../services/onboarding_service.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authServiceProvider);
-  final onboardingState = ref.watch(onboardingStateProvider);
+  final isOnboardingCompleted = ref.watch(isOnboardingCompletedProvider);
 
   return GoRouter(
     initialLocation: '/',
-    redirect: (context, state) async {
+    redirect: (context, state) {
       final isLoggedIn = authState.value != null;
-      final isProfileRoute = state.matchedLocation == '/profile';
+      final currentLocation = state.matchedLocation;
 
-      // Vérifier si l'onboarding a été complété
-      final hasCompletedOnboarding = await onboardingState.when(
-        data: (completed) => completed,
-        loading: () => false,
-        error: (_, __) => false,
-      );
+      print('🔄 Router redirect - Location: $currentLocation, Onboarding: $isOnboardingCompleted');
 
       // Si onboarding pas complété et pas déjà sur l'onboarding
-      if (!hasCompletedOnboarding && state.matchedLocation != '/onboarding') {
+      if (!isOnboardingCompleted && currentLocation != '/onboarding') {
+        print('➡️ Redirection vers onboarding');
         return '/onboarding';
       }
 
       // Si onboarding complété mais on est encore sur la page onboarding
-      if (hasCompletedOnboarding && state.matchedLocation == '/onboarding') {
+      if (isOnboardingCompleted && currentLocation == '/onboarding') {
+        print('➡️ Redirection vers home après onboarding');
         return '/';
       }
 
       // Redirection uniquement pour l'écran de profil si non connecté
-      if (!isLoggedIn && isProfileRoute) {
+      if (!isLoggedIn && currentLocation == '/profile') {
+        print('➡️ Redirection vers login (pas connecté)');
         return '/login';
       }
 
       return null; // Pas de redirection pour les autres routes
     },
     routes: [
-      // Onboarding Route (sans shell)
+      // Onboarding Route (sans shell - plein écran)
       GoRoute(
         path: '/onboarding',
         name: 'onboarding',
         builder: (context, state) => const OnboardingScreen(),
+      ),
+
+      // Auth Routes (sans shell - plein écran)
+      GoRoute(
+        path: '/login',
+        name: 'login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        name: 'register',
+        builder: (context, state) => const RegisterScreen(),
       ),
 
       // Shell principal avec bottom navigation
@@ -90,23 +95,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const MapScreen(),
           ),
           GoRoute(
+            path: '/ar',
+            name: 'ar',
+            builder: (context, state) => const ARScreen(),
+          ),
+          GoRoute(
             path: '/profile',
             name: 'profile',
             builder: (context, state) => const ProfileScreen(),
           ),
         ],
-      ),
-
-      // Auth Routes (sans shell - plein écran)
-      GoRoute(
-        path: '/login',
-        name: 'login',
-        builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: '/register',
-        name: 'register',
-        builder: (context, state) => const RegisterScreen(),
       ),
     ],
   );
