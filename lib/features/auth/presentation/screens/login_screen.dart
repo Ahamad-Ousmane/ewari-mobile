@@ -111,7 +111,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
       if (mounted) {
         _showSuccessSnackBar('Connexion réussie ! Bienvenue 🎉');
-        context.go('/');
+        // La redirection sera automatique grâce au router
       }
 
     } catch (e) {
@@ -254,34 +254,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Header avec bouton retour et titre
+                  // Header avec titre
                   SlideTransition(
                     position: _headerSlideAnimation,
                     child: Column(
                       children: [
-                        // Bouton retour moderne
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: IconButton(
-                                onPressed: () => NavigationHelper.safeGoBack(context, fallbackRoute: '/'),
-                                icon: const Icon(Icons.arrow_back, color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-
                         const SizedBox(height: 40),
 
                         // Logo et titre modernes
@@ -308,12 +285,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                         const SizedBox(height: 32),
 
                         const Text(
-                          'Bon retour !',
+                          'Bienvenue sur EWARI',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
                           ),
+                          textAlign: TextAlign.center,
                         ),
 
                         const SizedBox(height: 12),
@@ -325,6 +303,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                             color: Colors.white.withOpacity(0.9),
                             fontSize: 16,
                             height: 1.5,
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Indication connexion requise
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.lock_outline,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Connexion requise',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -537,94 +555,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                             ),
                           );
                         },
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // Mode visiteur moderne avec meilleur contraste
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.08),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF6C63FF).withOpacity(0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.visibility_outlined,
-                              color: Color(0xFF6C63FF),
-                              size: 32,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'Explorer sans compte',
-                            style: TextStyle(
-                              color: Color(0xFF2D3748),
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Découvrez les attractions touristiques du Bénin sans créer de compte',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                              height: 1.4,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            width: double.infinity,
-                            child: OutlinedButton.icon(
-                              onPressed: () => context.go('/'),
-                              icon: const Icon(
-                                Icons.explore,
-                                color: Color(0xFF6C63FF),
-                                size: 20,
-                              ),
-                              label: const Text(
-                                'Continuer en visiteur',
-                                style: TextStyle(
-                                  color: Color(0xFF6C63FF),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(
-                                  color: Color(0xFF6C63FF),
-                                  width: 2,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ),
