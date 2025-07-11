@@ -34,8 +34,7 @@ class _InfrastructureListScreenState extends ConsumerState<InfrastructureListScr
     {'id': null, 'label': 'Tout', 'icon': Icons.explore, 'color': Color(0xFF6C63FF)},
     {'id': 'hotel', 'label': 'Hôtels', 'icon': Icons.hotel, 'color': Color(0xFF6C63FF)},
     {'id': 'restaurant', 'label': 'Restaurants', 'icon': Icons.restaurant, 'color': Color(0xFFFF6B6B)},
-    {'id': 'plage', 'label': 'Plages', 'icon': Icons.beach_access, 'color': Color(0xFF4ECDC4)},
-    {'id': 'musee', 'label': 'Musées', 'icon': Icons.museum, 'color': Color(0xFFFFE66D)},
+    {'id': 'attraction', 'label': 'Attractions', 'icon': Icons.beach_access, 'color': Color(0xFF4ECDC4)},
     {'id': 'transport', 'label': 'Transport', 'icon': Icons.directions_bus, 'color': Color(0xFF95E1D3)},
   ];
 

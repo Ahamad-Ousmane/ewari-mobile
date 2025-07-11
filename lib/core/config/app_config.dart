@@ -6,7 +6,7 @@ class AppConfig {
   static const Map<String, String> infrastructureTypes = {
     'hotel': 'Hôtel',
     'restaurant': 'Restaurant',
-    'plage': 'Espace Plage',
+    'attraction': 'Attraction',
     'transport': 'Service de Transport',
   };
 

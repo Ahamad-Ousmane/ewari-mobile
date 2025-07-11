@@ -225,17 +225,10 @@ class InfrastructureCard extends StatelessWidget {
         return Icons.hotel;
       case 'restaurant':
         return Icons.restaurant;
-      case 'plage':
+      case 'attraction':
         return Icons.beach_access;
       case 'transport':
         return Icons.directions_bus;
-      case 'musee':
-      case 'musée':
-        return Icons.museum;
-      case 'parc':
-        return Icons.park;
-      case 'monument':
-        return Icons.account_balance;
       default:
         return Icons.place;
     }
@@ -247,17 +240,10 @@ class InfrastructureCard extends StatelessWidget {
         return 'Hôtel';
       case 'restaurant':
         return 'Restaurant';
-      case 'plage':
-        return 'Plage';
+      case 'attraction':
+        return 'Attraction';
       case 'transport':
         return 'Transport';
-      case 'musee':
-      case 'musée':
-        return 'Musée';
-      case 'parc':
-        return 'Parc';
-      case 'monument':
-        return 'Monument';
       default:
         return type.toUpperCase();
     }

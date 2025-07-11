@@ -1,4 +1,4 @@
-# newewari
+# ewari
 
 A new Flutter project.
 

@@ -434,8 +434,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                               children: [
                                 _buildFeatureItem(Icons.hotel, 'Hôtels'),
                                 _buildFeatureItem(Icons.restaurant, 'Restaurants'),
-                                _buildFeatureItem(Icons.beach_access, 'Plages'),
-                                _buildFeatureItem(Icons.museum, 'Musées'),
+                                _buildFeatureItem(Icons.beach_access, 'Attractions'),
+                                _buildFeatureItem(Icons.directions_bus, 'Transport'),
                               ],
                             ),
                           ),

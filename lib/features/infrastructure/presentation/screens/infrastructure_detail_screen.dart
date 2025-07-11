@@ -1200,17 +1200,10 @@ class _InfrastructureDetailScreenState extends ConsumerState<InfrastructureDetai
         return Icons.hotel;
       case 'restaurant':
         return Icons.restaurant;
-      case 'plage':
+      case 'attraction':
         return Icons.beach_access;
       case 'transport':
         return Icons.directions_bus;
-      case 'musee':
-      case 'musée':
-        return Icons.museum;
-      case 'parc':
-        return Icons.park;
-      case 'monument':
-        return Icons.account_balance;
       default:
         return Icons.place;
     }
@@ -1222,13 +1215,10 @@ class _InfrastructureDetailScreenState extends ConsumerState<InfrastructureDetai
         return const Color(0xFF6C63FF);
       case 'restaurant':
         return const Color(0xFFFF6B6B);
-      case 'plage':
+      case 'attraction':
         return const Color(0xFF4ECDC4);
       case 'transport':
         return const Color(0xFF95E1D3);
-      case 'musee':
-      case 'musée':
-        return const Color(0xFFFFE66D);
       default:
         return Colors.grey;
     }

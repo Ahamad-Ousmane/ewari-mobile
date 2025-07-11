@@ -77,7 +77,7 @@ class InfrastructureTouristique {
     const types = {
       'hotel': 'Hôtel',
       'restaurant': 'Restaurant',
-      'plage': 'Espace Plage',
+      'attraction': 'Attraction',
       'transport': 'Service de Transport',
     };
     return types[type] ?? type;

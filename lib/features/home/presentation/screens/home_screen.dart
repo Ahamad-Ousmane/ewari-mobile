@@ -393,8 +393,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final categories = [
       {'icon': '🏨', 'label': 'Hôtels', 'type': 'hotel', 'color': const Color(0xFF6C63FF)},
       {'icon': '🍽️', 'label': 'Restaurants', 'type': 'restaurant', 'color': const Color(0xFFFF6B6B)},
-      {'icon': '🏖️', 'label': 'Plages', 'type': 'plage', 'color': const Color(0xFF4ECDC4)},
-      {'icon': '🏛️', 'label': 'Musées', 'type': 'musee', 'color': const Color(0xFFFFE66D)},
+      {'icon': '🏖️', 'label': 'Attractions', 'type': 'attraction', 'color': const Color(0xFF4ECDC4)},
       {'icon': '🚌', 'label': 'Transport', 'type': 'transport', 'color': const Color(0xFF95E1D3)},
     ];
 
@@ -836,17 +835,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         return Icons.hotel;
       case 'restaurant':
         return Icons.restaurant;
-      case 'plage':
+      case 'attraction':
         return Icons.beach_access;
       case 'transport':
         return Icons.directions_bus;
-      case 'musee':
-      case 'musée':
-        return Icons.museum;
-      case 'parc':
-        return Icons.park;
-      case 'monument':
-        return Icons.account_balance;
       default:
         return Icons.place;
     }
