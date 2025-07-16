@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+  <Tracking>
+    <ImageTarget name="video17" size="5.000000 8.577482" />
+    <ImageTarget name="video7" size="5.000000 8.577482" />
+    <ImageTarget name="video16" size="5.000000 8.577482" />
+    <ImageTarget name="video15" size="5.000000 8.577482" />
+    <ImageTarget name="video12" size="5.000000 8.577482" />
+    <ImageTarget name="video10" size="5.000000 8.577482" />
+    <ImageTarget name="video6" size="5.000000 8.577482" />
+    <ImageTarget name="video5" size="5.000000 8.577482" />
+    <ImageTarget name="video3" size="5.000000 8.577482" />
+    <ImageTarget name="video1" size="5.000000 8.577482" />
+  </Tracking>
+</QCARConfig>

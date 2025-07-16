@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/services/auth_service.dart';
+import 'package:flutter/services.dart';
 
 class ARScreen extends ConsumerStatefulWidget {
   const ARScreen({super.key});
@@ -16,6 +17,8 @@ class _ARScreenState extends ConsumerState<ARScreen>
   late AnimationController _slideController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+
+  static const platform = MethodChannel('unity_channel');
 
   bool _isARSupported = true; // Pour simuler la détection AR
   bool _isLoading = false;
@@ -59,6 +62,22 @@ class _ARScreenState extends ConsumerState<ARScreen>
     setState(() {
       _isARSupported = true; // Simule que l'AR est supportée
     });
+  }
+
+  Future<void> _startARExperience() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await platform.invokeMethod('launchUnity');
+    } on PlatformException catch (e) {
+      print("Erreur lors du lancement d'Unity : ${e.message}");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -645,30 +664,6 @@ class _ARScreenState extends ConsumerState<ARScreen>
         ],
       ),
     );
-  }
-
-  void _startARExperience() {
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Simulation du démarrage AR
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-
-        // Ici vous lanceriez votre session AR réelle
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('🚀 Session AR démarrée ! (Mode démo)'),
-            backgroundColor: Color(0xFF667eea),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
-    });
   }
 
   void _startSpecificARExperience(String experienceTitle) {

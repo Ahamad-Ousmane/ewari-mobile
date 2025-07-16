@@ -23,3 +23,10 @@ plugins {
 }
 
 include ":app"
+include ':unityLibrary'
+include ':unityLibrary:xrmanifest.androidlib'
+include ':unityandroidpermissions'
+include ':VuforiaEngine'
+project(':unityLibrary').projectDir = file('unityLibrary')
+project(':unityandroidpermissions').projectDir = file('unityLibrary/unityandroidpermissions')
+project(':VuforiaEngine').projectDir = file('unityLibrary/VuforiaEngine')
